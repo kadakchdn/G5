@@ -32,3 +32,13 @@ jobs:
       - name: Execute Tests
         run: |
           java -jar target/new2-1.0.0-jar-with-dependencies.jar  # Update path based on build output
+
+      - name: Find the Latest Report Folder
+        id: find-report
+        run: echo "REPORT_PATH=$(ls -td /home/runner/work/G5/G5/*/ | head -1)" >> $GITHUB_ENV
+
+      - name: Upload HTML Report as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: ${{ env.REPORT_PATH }}
