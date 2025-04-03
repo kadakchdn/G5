@@ -20,7 +20,7 @@ jobs:
           java-version: '17'  # Adjust based on your project
  
       - name: Build Project (Maven)
-        run: mvn clean package -DskipTests=true  # If using Maven
+        run: mvn clean package 
  
       # - name: Build Project (Gradle)  # Uncomment this if using Gradle instead of Maven
       #   run: ./gradlew build -x test  
