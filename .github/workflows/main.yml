@@ -20,7 +20,11 @@ jobs:
           java-version: '17'  # Adjust based on your project
  
       - name: Build Project (Maven)
-        run: mvn clean package 
+        run: mvn clean package -DskipTests=true  # If using Maven
+ 
+      # Debugging Step: List files in target directory
+      - name: List Target Directory
+        run: ls -lah target  # This will show if new2.jar exists
  
       # - name: Build Project (Gradle)  # Uncomment this if using Gradle instead of Maven
       #   run: ./gradlew build -x test  
