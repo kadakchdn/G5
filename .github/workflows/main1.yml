@@ -29,7 +29,9 @@ jobs:
 
       - name: Execute Tests
         run: |
-          java -jar target/new2-1.0.0-jar-with-dependencies.jar  # Update path based on build output
+          cd target  # Navigate to the target directory
+          ls -lah    # Debug: List files to ensure the JAR exists
+          java -jar new2-1.0.0-jar-with-dependencies.jar  # Run the JAR
 
       # Debug: List all files in the report directory
       - name: Debug - List report directory contents
@@ -62,3 +64,5 @@ jobs:
         with:
           name: test-report
           path: ${{ env.REPORT_PATH }}
+
+       
