@@ -1,68 +1,36 @@
-
 name: Build and Run Tests on Push
-
 on:  
   push:  
     branches:  
       - "**"  # Runs on any branch push
-
 jobs:
   build-and-run-tests:
     runs-on: ubuntu-latest  # Change to windows-latest or macos-latest if needed
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4  
-
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'  
           java-version: '17'  # Adjust based on your project
-
       - name: Build Project (Maven)
         run: mvn clean package -DskipTests=true  # If using Maven
-
       # Debugging Step: List files in target directory
       - name: List Target Directory
         run: ls -lah target  # This will show if new2.jar exists
-
       - name: Execute Tests
         run: |
           cd target  # Navigate to the target directory
           ls -lah    # Debug: List files to ensure the JAR exists
           java -jar new2-1.0.0-jar-with-dependencies.jar  # Run the JAR
-
+          
       # Debug: List all files in the report directory
       - name: Debug - List report directory contents
         run: ls -lah /home/runner/work/G5/G5/
-
-      # ✅ Fix: Find latest report directory properly
+ 
+      # Find latest report directory dynamically
       - name: Find the Latest Report Folder
         id: find-report
-        run: |
-          REPORT_PATH=$(ls -td /home/runner/work/G5/G5/*/ 2>/dev/null | head -1)
-          if [[ -z "$REPORT_PATH" ]]; then
-            echo "ERROR: No report folder found!"
-            exit 1
-          fi
-          echo "REPORT_PATH=$REPORT_PATH" >> $GITHUB_ENV
-          echo "Detected Report Path: $REPORT_PATH"
-
-      # Debug: Confirm the report path
-      - name: Debug - Show report path
-        run: |
-          if [[ -z "${{ env.REPORT_PATH }}" ]]; then
-            echo "ERROR: REPORT_PATH is empty!"
-            exit 1
-          fi
-          echo "Final Report Path: ${{ env.REPORT_PATH }}"
-
-      # ✅ Fix: Upload HTML report as an artifact correctly
-      - name: Upload HTML Report as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-report
-          path: ${{ env.REPORT_PATH }}
-
-       
+        run: echo "REPORT_PATH=$(ls -td /home/runner/work/G5/G5/*/ | head -1)" >> $GITHUB_ENV
+ 
