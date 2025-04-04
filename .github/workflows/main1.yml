@@ -1,35 +1,52 @@
 name: Build and Run Tests on Push
+
 on:  
   push:  
     branches:  
       - "**"  # Runs on any branch push
+
 jobs:
   build-and-run-tests:
     runs-on: ubuntu-latest  # Change to windows-latest or macos-latest if needed
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4  
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'  
           java-version: '17'  # Adjust based on your project
+
       - name: Build Project (Maven)
         run: mvn clean package -DskipTests=true  # If using Maven
-        
+
       # Debugging Step: List files in target directory
       - name: List Target Directory
         run: ls -lah target  # This will show if new2.jar exists
-        
+
       - name: Execute Tests
         run: |
           cd target  # Navigate to the target directory
           ls -lah    # Debug: List files to ensure the JAR exists
           java -jar new2-1.0.0-jar-with-dependencies.jar  # Run the JAR
-          
-      # Debug: List all files in the report directory
-      - name: Debug - List report directory contents
-        run: ls -lah /home/runner/work/G5/G5/target/./
- 
-    
- 
+
+      - name: Debug - Verify Report Directory
+        run: |
+          if [ -d "/home/runner/work/G5/G5/target" ]; then
+            echo "Directory exists"
+            ls -lah /home/runner/work/G5/G5/target
+          else
+            echo "Directory does not exist"
+            exit 1
+          fi
+
+      - name: Find Latest Report Directory
+        run: |
+          REPORT_DIR=$(ls -td /home/runner/work/G5/G5/target/*/ | head -1)
+          echo "Latest report directory: $REPORT_DIR"
+          echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
+
+      - name: Debug - List Contents of Latest Report Directory
+        run: ls -lah $REPORT_DIR
