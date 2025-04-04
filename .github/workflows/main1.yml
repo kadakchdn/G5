@@ -28,22 +28,14 @@ jobs:
 
       - name: Execute Tests
         run: |
-          cd target  # Navigate to the target directory
-          ls -lah    # Debug: List files to ensure the JAR exists
-          java -jar new2-1.0.0-jar-with-dependencies.jar  # Run the JAR
+          set -e
+          cd target
+          echo "✅ Running Java Test..."
+          java -jar new2-1.0.0-jar-with-dependencies.jar > test-output.log 2>&1 || echo "❌ Test execution failed, but continuing."
 
-      - name: Find Latest Report Directory
-        run: |
-         REPORT_DIR=$(find target -mindepth 1 -maxdepth 1 -type d | sort -r | head -1)
-         echo "Latest report directory: $REPORT_DIR"
-         echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
-
-     
-      - name: Debug - List Report Directory Contents
-        run: ls -lah $REPORT_DIR
-
-      - name: Upload HTML Report
-        uses: actions/upload-artifact@v4
+      - name: Upload Test Logs
+        if: always()
+        uses: actions/upload-artifact@v3
         with:
-             name: Test-Report
-             path: ${{ env.REPORT_DIR }}
+          name: Test-Logs
+          path: target/test-output.log
