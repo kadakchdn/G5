@@ -32,18 +32,23 @@ jobs:
           ls -lah    # Debug: List files to ensure the JAR exists
           java -jar new2-1.0.0-jar-with-dependencies.jar  # Run the JAR
 
-      - name: Find Latest Report File
+      - name: Find Latest Report Directory
         run: |
-          REPORT_FILE=$(find /home/runner/work/G5/G5/target -type f -name "index.html" | sort -r | head -1)
-          echo "Latest report file: $REPORT_FILE"
-          echo "REPORT_FILE=$REPORT_FILE" >> $GITHUB_ENV
+         REPORT_DIR=$(find target -mindepth 1 -maxdepth 1 -type d | sort -r | head -1)
+         echo "Latest report directory: $REPORT_DIR"
+         echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
 
+     
+      - name: Debug - List Report Directory Contents
+        run: ls -lah $REPORT_DIR
 
       - name: Upload HTML Report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: Test-Report
-          path: ${{ env.REPORT_FILE }}
+    name: Test-Report
+    path: ${{ env.REPORT_DIR }}
+
+
      
 
 
