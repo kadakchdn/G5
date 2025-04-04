@@ -16,9 +16,11 @@ jobs:
           java-version: '17'  # Adjust based on your project
       - name: Build Project (Maven)
         run: mvn clean package -DskipTests=true  # If using Maven
+        
       # Debugging Step: List files in target directory
       - name: List Target Directory
         run: ls -lah target  # This will show if new2.jar exists
+        
       - name: Execute Tests
         run: |
           cd target  # Navigate to the target directory
@@ -27,10 +29,7 @@ jobs:
           
       # Debug: List all files in the report directory
       - name: Debug - List report directory contents
-        run: ls -lah /home/runner/work/G5/G5/
+        run: ls -lah /home/runner/work/G5/G5/target/./
  
-      # Find latest report directory dynamically
-      - name: Find the Latest Report Folder
-        id: find-report
-        run: echo "REPORT_PATH=$(ls -td /home/runner/work/G5/G5/*/ | head -1)" >> $GITHUB_ENV
+    
  
