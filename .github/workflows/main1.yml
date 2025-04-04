@@ -32,21 +32,21 @@ jobs:
           ls -lah    # Debug: List files to ensure the JAR exists
           java -jar new2-1.0.0-jar-with-dependencies.jar  # Run the JAR
 
-      - name: Debug - Verify Report Directory
-        run: |
-          if [ -d "/home/runner/work/G5/G5/target" ]; then
-            echo "Directory exists"
-            ls -lah /home/runner/work/G5/G5/target
-          else
-            echo "Directory does not exist"
-            exit 1
-          fi
-
       - name: Find Latest Report Directory
         run: |
-          REPORT_DIR=$(ls -td /home/runner/work/G5/G5/target/./ | head -1)
+          REPORT_DIR=$(find /home/runner/work/G5/G5/target -mindepth 1 -maxdepth 1 -type d | sort -r | head -1)
           echo "Latest report directory: $REPORT_DIR"
           echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
 
-      - name: Debug - List Contents of Latest Report Directory
+      - name: Debug - List Report Directory Contents
         run: ls -lah $REPORT_DIR
+
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test-Report
+          path: ${{ env.REPORT_DIR }}
+
+     
+
+
