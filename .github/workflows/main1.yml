@@ -38,11 +38,13 @@ jobs:
           echo "Latest report directory: $REPORT_DIR"
           echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
 
+     
+
       - name: Debug - List Report Directory Contents
-        run: ls -lah $REPORT_DIR
+        run: ls -lah ${{ env.REPORT_DIR }}
 
       - name: Upload HTML Report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: Test-Report
           path: ${{ env.REPORT_DIR }}
