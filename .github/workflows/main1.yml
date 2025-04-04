@@ -44,7 +44,7 @@ jobs:
 
       - name: Find Latest Report Directory
         run: |
-          REPORT_DIR=$(ls -td /home/runner/work/G5/G5/target/*/ | head -1)
+          REPORT_DIR=$(ls -td /home/runner/work/G5/G5/target/./ | head -1)
           echo "Latest report directory: $REPORT_DIR"
           echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
 
