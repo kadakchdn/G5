@@ -28,25 +28,22 @@ jobs:
 
       - name: Execute Tests
         run: |
-          set -e  # Stop script on errors
-          cd target
-          echo "✅ Listing files before execution..."
-          ls -lah
-          echo "✅ Running Java Test..."
-          java -jar new2-1.0.0-jar-with-dependencies.jar || echo "❌ Test execution failed, but continuing."
+          cd target  # Navigate to the target directory
+          ls -lah    # Debug: List files to ensure the JAR exists
+          java -jar new2-1.0.0-jar-with-dependencies.jar  # Run the JAR
 
-      - name: Find Report File
+      - name: Find Latest Report Directory
         run: |
-          REPORT_FILE=$(find target -type f -name "index.html" | sort -r | head -1 || true)
-          if [ -z "$REPORT_FILE" ]; then
-            echo "❌ No report file found!"
-            exit 1
-          fi
-          echo "Latest report file: $REPORT_FILE"
-          echo "REPORT_FILE=$REPORT_FILE" >> $GITHUB_ENV
+         REPORT_DIR=$(find target -mindepth 1 -maxdepth 1 -type d | sort -r | head -1)
+         echo "Latest report directory: $REPORT_DIR"
+         echo "REPORT_DIR=$REPORT_DIR" >> $GITHUB_ENV
+
+     
+      - name: Debug - List Report Directory Contents
+        run: ls -lah $REPORT_DIR
 
       - name: Upload HTML Report
         uses: actions/upload-artifact@v4
         with:
-          name: Test-Report
-          path: ${{ env.REPORT_FILE }}  # Ensure only the file is uploaded
+             name: Test-Report
+             path: ${{ env.REPORT_DIR }}
